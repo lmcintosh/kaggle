@@ -31,13 +31,22 @@ def main():
 
 
     #DATA EXPLORATION
-    #use last price as prediction (Last Observed Benchmark)
-    pred = np.zeros((len(trainingDays),sum(isOutput)))
-    for day in range(0,len(trainingDays)):
-        for stock in range(0,sum(isOutput)):
-            pred[day,stock] = trainOutput[day,-1,stock]
-   
-    print "Results: " + str(error)
+    #use exponential moving average and grad descent to find discountRate
+    iterations = 20
+    learningRate = 1
+    discountRate = [0.552329, 0.5523]
+    error = [0.43811969431]
+    for i in range(0,iterations):
+        pred = np.zeros((len(trainingDays),sum(isOutput)))
+        for day in range(0,len(trainingDays)):
+            for stock in range(0,sum(isOutput)):
+                for j in range(0,numRows):
+                    pred[day,stock] = discountRate[-1]*trainOutput[day,j,stock] + (1-discountRate[-1])*pred[day,stock]
+
+        error.append(err.maeFun(target,pred[0:200,:])) #maeFun(actual,pred)
+        print "Results: " + str(error[-1]) + " Discount Rate: " + str(discountRate[-1])
+        discountRate.append(discountRate[-1] - learningRate*(error[-2] - error[-1])/(discountRate[-2] - discountRate[-1]))
+
 
     #generate predictions and save to file
     np.savetxt('Data/submission'+str(datetime.date.today())+'.csv', pred[200:510,:], delimiter=',', fmt='%f')  #predictions for file 201 to 510
