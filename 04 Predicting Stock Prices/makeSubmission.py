@@ -31,39 +31,7 @@ def main():
 
 
     #DATA EXPLORATION
-    #use grad descent to fit linear models of the last observed value for each stock
-    iterations   = 500
-    learningRate = 0.01
-    h            = (2e-15)**(1./3)
-    coeff        = np.zeros((sum(isOutput),2))
-    coeff[:,1]   = np.squeeze(np.ones((sum(isOutput),1)))
-    error        = []
-    gradient     = [0,0]
-    pred0P = np.zeros((len(trainingDays),sum(isOutput)))
-    pred0M = np.zeros((len(trainingDays),sum(isOutput)))
-    pred1P = np.zeros((len(trainingDays),sum(isOutput)))
-    pred1M = np.zeros((len(trainingDays),sum(isOutput)))
-    pred   = np.zeros((len(trainingDays),sum(isOutput)))
-    for stock in range(0,sum(isOutput)):
-        for day in range(0,len(trainingDays)):
-            pred[day,stock]   = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0])
     
-    for stock in range(0,sum(isOutput)):
-        for i in range(0,iterations):
-            for day in range(0,len(trainingDays)):
-                pred0P[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0] + h)
-                pred0M[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0] - h)
-                pred1P[day,stock] = (coeff[stock,1]+h)*trainOutput[day,-1,stock] + (coeff[stock,0])
-                pred1M[day,stock] = (coeff[stock,1]-h)*trainOutput[day,-1,stock] + (coeff[stock,0])
-                pred[day,stock]   = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0])
-
-            gradient[0] = (err.maeFun(target,pred0P[0:200,:]) - err.maeFun(target,pred0M[0:200,:]))/(2*h)
-            gradient[1] = (err.maeFun(target,pred1P[0:200,:]) - err.maeFun(target,pred1M[0:200,:]))/(2*h)
-            coeff[stock,:] = [coeff[stock,x] - learningRate*gradient[x] for x in range(0,len(gradient))]
-            print "Stock: " + str(stock) + " Error: " + str(err.maeFun(target[:,stock],pred[0:200,stock])) + " Coeff: " + str(coeff[stock,:])
-
-        error.append(err.maeFun(target,pred[0:200,:])) #maeFun(actual,pred)
-        print "Results: " + str(error[-1]) + " Variance of coefficients: " + str([np.var(coeff[:,0]), np.var(coeff[:,1])])
     
 
     #generate predictions and save to file
