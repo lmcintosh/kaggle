@@ -31,8 +31,13 @@ def main():
 
 
     #DATA EXPLORATION
-    
-    
+    #use last price as prediction (Last Observed Benchmark)
+    pred = np.zeros((len(trainingDays),sum(isOutput)))
+    for day in range(0,len(trainingDays)):
+        for stock in range(0,sum(isOutput)):
+            pred[day,stock] = trainOutput[day,-1,stock]
+   
+    print "Results: " + str(error)
 
     #generate predictions and save to file
     np.savetxt('Data/submission'+str(datetime.date.today())+'.csv', pred[200:510,:], delimiter=',', fmt='%f')  #predictions for file 201 to 510
