@@ -2,6 +2,7 @@ from linearMAE import LinearMAE
 from numpy import array
 import numpy as np
 import meanAbsoluteError as err
+import datetime
 
 trainingDays = range(1,511) #200 days of training data, 510 total days
 headers = np.genfromtxt(open('Data/data/1.csv','r'),delimiter=',',dtype='string')[0]
@@ -28,13 +29,21 @@ target = target[:,1:]  # (day,price2HrsLater)
 #X = array([[0,1,2,4], [2,1,0,5]])
 #y = array([[0,1], [2,3]])
 
-X = trainOutput.reshape(trainOutput.shape[0]*trainOutput.shape[2],trainOutput.shape[1])
+X = trainOutput[0:200,:,:]
+X = X.reshape(X.shape[0]*X.shape[2],X.shape[1])
 y = target.reshape(target.shape[0]*target.shape[1],1)
 
 
 lin = LinearMAE(l1=1.0, l2=0.0, verbose=True, opt='cg', maxiter=10)
-
 lin.fit(X,y)
+
+test = trainOutput[200:511,:,:]
+testPrep = test.reshape(test.shape[0]*test.shape[2],test.shape[1])
+pred = lin.predict(testPrep)
+pred = pred.reshape(test.shape[0],test.shape[2])
+
+np.savetxt('Data/submission'+str(datetime.date.today())+'_mhTest.csv', pred, delimiter=',', fmt='%f')  #predictions for file 201 to 510
+
 #print
 #print 'Prediction' 
 #print lin.predict(X)
