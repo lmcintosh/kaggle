@@ -37,7 +37,7 @@ y = target.reshape(target.shape[0]*target.shape[1],1)
 lin = LinearMAE(l1=1.0, l2=0.0, verbose=True, opt='cg')
 lin.fit(X,y)
 
-test = trainOutput[200:511,:,:]
+test = trainOutput[200:511,-4:-1,:]
 testPrep = test.reshape(test.shape[0]*test.shape[2],test.shape[1])
 pred = lin.predict(testPrep)
 pred = pred.reshape(test.shape[0],test.shape[2])
