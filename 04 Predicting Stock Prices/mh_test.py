@@ -29,7 +29,7 @@ target = target[:,1:]  # (day,price2HrsLater)
 #X = array([[0,1,2,4], [2,1,0,5]])
 #y = array([[0,1], [2,3]])
 
-X = trainOutput[0:200,:,:]
+X = trainOutput[0:200,-4:-1,:]
 X = X.reshape(X.shape[0]*X.shape[2],X.shape[1])
 y = target.reshape(target.shape[0]*target.shape[1],1)
 
