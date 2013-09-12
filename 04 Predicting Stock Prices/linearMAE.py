@@ -153,6 +153,7 @@ def grad(coef, X, y, l1=0, l2=0):
     """
     #~ y = np.atleast_2d(y).T if len(y.shape) == 1 else y
     y = _2d(y)
+    X = _2d(X)
     m, n = X.shape
     m, o = y.shape
     Xb = np.hstack((np.ones((m,1)), X))
