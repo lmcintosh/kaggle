@@ -34,7 +34,7 @@ X = X.reshape(X.shape[0]*X.shape[2],X.shape[1])
 y = target.reshape(target.shape[0]*target.shape[1],1)
 
 
-lin = LinearMAE(l1=1.0, l2=0.0, verbose=True)
+lin = LinearMAE(l1=1.0, l2=0.0, verbose=True, opt='cg')
 lin.fit(X,y)
 
 test = trainOutput[200:511,:,:]
