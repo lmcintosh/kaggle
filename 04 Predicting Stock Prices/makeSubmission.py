@@ -35,14 +35,16 @@ def main():
     iterations   = 500
     learningRate = 0.01
     h            = (2e-15)**(1./3)
-    coeff        = np.zeros((sum(isOutput),2))
+    coeff        = np.zeros((sum(isOutput),3))
     coeff[:,1]   = np.squeeze(np.ones((sum(isOutput),1)))
     error        = []
-    gradient     = [0,0]
+    gradient     = [0,0,0]
     pred0P = np.zeros((len(trainingDays),sum(isOutput)))
     pred0M = np.zeros((len(trainingDays),sum(isOutput)))
     pred1P = np.zeros((len(trainingDays),sum(isOutput)))
     pred1M = np.zeros((len(trainingDays),sum(isOutput)))
+    pred2P = np.zeros((len(trainingDays),sum(isOutput)))
+    pred2M = np.zeros((len(trainingDays),sum(isOutput)))
     pred   = np.zeros((len(trainingDays),sum(isOutput)))
     for stock in range(0,sum(isOutput)):
         for day in range(0,len(trainingDays)):
@@ -51,14 +53,18 @@ def main():
     for stock in range(0,sum(isOutput)):
         for i in range(0,iterations):
             for day in range(0,len(trainingDays)):
-                pred0P[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0] + h)
-                pred0M[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0] - h)
-                pred1P[day,stock] = (coeff[stock,1]+h)*trainOutput[day,-1,stock] + (coeff[stock,0])
-                pred1M[day,stock] = (coeff[stock,1]-h)*trainOutput[day,-1,stock] + (coeff[stock,0])
-                pred[day,stock]   = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,0])
+                deriv = trainOutput[day,-1,stock] - trainOutput[day,-2,stock]
+                pred0P[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,2])*deriv + (coeff[stock,0] + h)
+                pred0M[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,2])*deriv + (coeff[stock,0] - h)
+                pred1P[day,stock] = (coeff[stock,1]+h)*trainOutput[day,-1,stock] +  (coeff[stock,2])*deriv + (coeff[stock,0])
+                pred1M[day,stock] = (coeff[stock,1]-h)*trainOutput[day,-1,stock] +  (coeff[stock,2])*deriv +(coeff[stock,0])
+                pred2P[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] +  (coeff[stock,2]+h)*deriv + (coeff[stock,0])
+                pred2M[day,stock] = (coeff[stock,1])*trainOutput[day,-1,stock] +  (coeff[stock,2]-h)*deriv +(coeff[stock,0])
+                pred[day,stock]   = (coeff[stock,1])*trainOutput[day,-1,stock] + (coeff[stock,2])*deriv +(coeff[stock,0])
 
             gradient[0] = (err.maeFun(target,pred0P[0:200,:]) - err.maeFun(target,pred0M[0:200,:]))/(2*h)
             gradient[1] = (err.maeFun(target,pred1P[0:200,:]) - err.maeFun(target,pred1M[0:200,:]))/(2*h)
+            gradient[2] = (err.maeFun(target,pred2P[0:200,:]) - err.maeFun(target,pred2M[0:200,:]))/(2*h)
             coeff[stock,:] = [coeff[stock,x] - learningRate*gradient[x] for x in range(0,len(gradient))]
             print "Stock: " + str(stock) + " Error: " + str(err.maeFun(target[:,stock],pred[0:200,stock])) + " Coeff: " + str(coeff[stock,:])
 
