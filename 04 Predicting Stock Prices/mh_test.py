@@ -25,14 +25,18 @@ target = np.array(np.genfromtxt(open('Data/trainLabels.csv','r'), delimiter=',',
 target = target[:,1:]  # (day,price2HrsLater)
 
 
-X = array([[0,1,2,4], [2,1,0,5]])
-y = array([[0,1], [2,3]])
+#X = array([[0,1,2,4], [2,1,0,5]])
+#y = array([[0,1], [2,3]])
+
+X = trainOutput.reshape(trainOutput.shape[0]*trainOutput.shape[2],trainOutput.shape[1])
+y = target.reshape(target.shape[0]*target.shape[1],1)
+
 
 lin = LinearMAE(l1=1.0, l2=0.0, verbose=True, opt='cg', maxiter=10)
 
-lin.fit(trainOutput,target)
-print
-print 'Prediction' 
-print lin.predict(trainOutput)
-print 'Target'
-print target
+lin.fit(X,y)
+#print
+#print 'Prediction' 
+#print lin.predict(X)
+#print 'Target'
+#print y
