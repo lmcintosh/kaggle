@@ -163,7 +163,7 @@ def grad(coef, X, y, l1=0, l2=0):
     derr = Xb.T.dot(np.sign(err)) / m
     dl1 = np.vstack((np.zeros(o), np.sign(coef[1:]))) if l1 > 0 else 0 
     dl2 = np.vstack((np.zeros(o), np.copy(coef[1:]))) if l2 > 0 else 0
-    return (derr + l1 * dl1 + l2 * dl2).flatten()
+    return (10*derr + l1 * dl1 + l2 * dl2).flatten()
 
 def _2d(a):
     """Returns a 2d array of a if rank a <= 2"""
