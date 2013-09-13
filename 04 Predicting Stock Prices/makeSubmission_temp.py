@@ -40,7 +40,7 @@ def main():
     error        = []
     gradient     = [0,0,0]
     twoHrs = 120/5
-    maxLag = numRows - twoHrs  # last datapoint x where 2hrs from x is recorded
+    maxLag = numRows - (twoHrs+1)  # last datapoint x where 2hrs from x is recorded
     pred0P = np.zeros((len(trainingDays),sum(isOutput)))
     pred0M = np.zeros((len(trainingDays),sum(isOutput)))
     pred1P = np.zeros((len(trainingDays),sum(isOutput)))
@@ -64,9 +64,9 @@ def main():
                     pred2Pi = (coeff[stock,1])*trainOutput[day,row,stock] +  (coeff[stock,2]+h)*deriv + (coeff[stock,0])
                     pred2Mi = (coeff[stock,1])*trainOutput[day,row,stock] +  (coeff[stock,2]-h)*deriv +(coeff[stock,0])
                     #pred   = (coeff[stock,1])*trainOutput[day,row,stock] + (coeff[stock,2])*deriv +(coeff[stock,0])
-                    gradient[0] = (err.maeFun(trainOutput[day,row+maxLag,stock],pred0Pi) - err.maeFun(trainOutput[day,row+maxLag,stock],pred0Mi)
-                    gradient[1] = (err.maeFun(trainOutput[day,row+maxLag,stock],pred1Pi) - err.maeFun(trainOutput[day,row+maxLag,stock],pred1Mi)
-                    gradient[2] = (err.maeFun(trainOutput[day,row+maxLag,stock],pred2Pi) - err.maeFun(trainOutput[day,row+maxLag,stock],pred2Mi)
+                    gradient[0] = (err.maeFun(trainOutput[day,row+maxLag,stock],pred0Pi) - err.maeFun(trainOutput[day,row+maxLag,stock],pred0Mi))/(2*h)
+                    gradient[1] = (err.maeFun(trainOutput[day,row+maxLag,stock],pred1Pi) - err.maeFun(trainOutput[day,row+maxLag,stock],pred1Mi))/(2*h)
+                    gradient[2] = (err.maeFun(trainOutput[day,row+maxLag,stock],pred2Pi) - err.maeFun(trainOutput[day,row+maxLag,stock],pred2Mi))/(2*h)
                     coeff[stock,:] = [coeff[stock,x] - learningRate*gradient[x] for x in range(0,len(gradient))]
 
                 deriv = trainOutput[day,-1,stock] - trainOutput[day,-2,stock]
