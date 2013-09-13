@@ -40,7 +40,7 @@ def main():
     error        = []
     gradient     = [0,0,0]
     twoHrs = 120/5
-    maxLag = numRows - (twoHrs+2)  # last datapoint x where 2hrs from x is recorded
+    maxLag = numRows - (twoHrs+4)  # last datapoint x where 2hrs from x is recorded
     pred0P = np.zeros((len(trainingDays),sum(isOutput)))
     pred0M = np.zeros((len(trainingDays),sum(isOutput)))
     pred1P = np.zeros((len(trainingDays),sum(isOutput)))
